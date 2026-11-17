@@ -1,0 +1,20 @@
+experiment:
+  name: "fashion_mnist_mlflow_pipeline"
+  seed: 42
+
+data:
+  dataset: "FashionMNIST"
+  root_dir: "./data"
+  batch_size: 128
+  val_split: 5000
+  num_workers: 2
+
+model:
+  name: "CNN" # Options: MLP, CNN, Attention
+  learning_rate: 0.001
+  epochs: 5
+
+logging:
+  mlflow_tracking_uri: "sqlite:///mlflow.db"
+  artifact_path: "artifacts"
+  checkpoint_dir: "./checkpoints"

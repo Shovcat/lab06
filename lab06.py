@@ -13,9 +13,7 @@ from torchinfo import summary
 from thop import profile
 import numpy as np
 
-# ==========================================
-# 1. Parse Arguments & Load Configuration
-# ==========================================
+
 parser = argparse.ArgumentParser(description="Lab 6 PyTorch MLflow Pipeline")
 parser.add_argument("--model", type=str, default=None, choices=["MLP", "CNN", "Attention"], help="Override model architecture")
 args = parser.parse_args()
@@ -33,9 +31,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 os.makedirs(config["logging"]["checkpoint_dir"], exist_ok=True)
 
 
-# ==========================================
-# 2. Dataset & DataLoaders
-# ==========================================
+
 def get_dataloaders():
     transform = transforms.Compose([
         transforms.ToTensor(),
@@ -63,9 +59,7 @@ def get_dataloaders():
     return train_loader, val_loader, test_loader
 
 
-# ==========================================
-# 3. Model Definitions
-# ==========================================
+
 class MLPModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -118,9 +112,6 @@ class AttentionModel(nn.Module):
         return self.fc(x)
 
 
-# ==========================================
-# 4. Latency & Profiling Benchmarks
-# ==========================================
 def measure_latency(model, batch_size, num_runs=50):
     model.eval()
     dummy = torch.randn(batch_size, 1, 28, 28).to(device)
@@ -139,9 +130,6 @@ def measure_latency(model, batch_size, num_runs=50):
     return float(np.median(latencies))
 
 
-# ==========================================
-# 5. Training & MLflow Logging Loop
-# ==========================================
 def main():
     mlflow.set_tracking_uri(config["logging"]["mlflow_tracking_uri"])
     mlflow.set_experiment(config["experiment"]["name"])
